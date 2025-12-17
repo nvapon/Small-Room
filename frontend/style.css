@@ -45,3 +45,27 @@ body {
     align-items: center;
     justify-content: center;
 }
+
+#item {
+    display: flex;
+    gap: 8px;
+}
+
+.item {
+    background: #eee;
+    border: 2px solid #999;
+    border-radius: 6px;
+    cursor: grab;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 12px;
+    user-select: none;
+}
+
+.item.selected {
+    outline: 3px solid #2563eb;
+    background: #dbeafe;
+}
