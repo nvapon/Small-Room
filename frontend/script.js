@@ -13,6 +13,14 @@ for(let y=0; y<GRID_SIZE; y++){
         cell.textContent = `${x},${y}`;
 
         room.appendChild(cell);
+
+        cell.addEventListener("mouseenter", () => {
+            showPreview(cell);
+        });
+
+        cell.addEventListener("mouseleave", () => {
+            clearPreview();
+        });
     }
 }
 
@@ -52,4 +60,30 @@ function selectItem(item, element){
     element.classList.add("selected"); //เลือกอันใหม่
 
     console.log("Selected:", item.id);
+}
+
+function showPreview(cell) {
+    if(!selectedItem) return;
+
+    clearPreview();
+
+    const startX = Number(cell.dataset.x);
+    const startY = Number(cell.dataset.y);
+
+    for(let y=0; y<selectedItem.h; y++){
+        for(let x=0; x<selectedItem.w; x++){
+            const target = document.querySelector(
+                `.cell[data-x="${startX+x}"][data-y="${startY+y}"]`
+            );
+            if(target){
+                target.classList.add("preview");
+            }
+        }
+    }
+}
+
+function clearPreview(){
+    document.querySelectorAll(".cell.preview").forEach(c => {
+        c.classList.remove("preview");
+    });
 }
