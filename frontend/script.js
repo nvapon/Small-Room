@@ -98,7 +98,7 @@ function showPreview(cell) {
 }
 
 function clearPreview(){
-    document.querySelectorAll(".cell.preview", ".cell.invalid").forEach(c => {
+    document.querySelectorAll(".cell.preview, .cell.invalid").forEach(c => { //uerySelectorAllรับargumentได้แค่อันเดียว //for CSS: ".cell.preview, .cell.invalid, ..." = commaคือor
         c.classList.remove("preview", "invalid");
     });
 }
