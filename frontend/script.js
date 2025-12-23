@@ -1,5 +1,6 @@
 const room = document.getElementById("room");
 const GRID_SIZE = 6;
+const occupied = new Set();
 
 let selectedItem = null;
 
@@ -8,8 +9,8 @@ for(let y=0; y<GRID_SIZE; y++){
         const cell = document.createElement("div");
         cell.classList.add("cell");
 
-        cell.dataset.x = x;
-        cell.dataset.y = y;
+        cell.dataset.x = x; //data-x = x บนhtml //datasetเก็บเป็นstring
+        cell.dataset.y = y; //data-y = y
         cell.textContent = `${x},${y}`;
 
         room.appendChild(cell);
@@ -67,23 +68,37 @@ function showPreview(cell) {
 
     clearPreview();
 
-    const startX = Number(cell.dataset.x);
+    const startX = Number(cell.dataset.x); //แปลงstringเป็นตัวเลข
     const startY = Number(cell.dataset.y);
 
-    for(let y=0; y<selectedItem.h; y++){
+    let valid = true;
+    const previewCells = [];
+
+    for(let y=0; y<selectedItem.h; y++){ //รันครบ2forloopแล้วrenderทีเดียว->เห็นหลายcell showพร้อมกัน single thread
         for(let x=0; x<selectedItem.w; x++){
-            const target = document.querySelector(
-                `.cell[data-x="${startX+x}"][data-y="${startY+y}"]`
+            const tx = startX + x;
+            const ty = startY + y;
+
+            const target = document.querySelector( //ค้นหา element จาก “เงื่อนไข” document.querySelector('.cell[data-x="3"][data-y="2"]')
+                `.cell[data-x="${tx}"][data-y="${ty}"]` //f'{}..{}..' ใช้blacktick เมื่อมีการแทรกตัวแปรในstr
             );
-            if(target){
-                target.classList.add("preview");
+
+            if(!target || occupied.has(`${tx},${ty}`)){
+                valid = false;
+                continue;
             }
+
+            previewCells.push(target);
         }
     }
+
+    previewCells.forEach( c => {
+        c.classList.add(valid ? "preview" : "invalid");
+    });
 }
 
 function clearPreview(){
-    document.querySelectorAll(".cell.preview").forEach(c => {
-        c.classList.remove("preview");
+    document.querySelectorAll(".cell.preview", ".cell.invalid").forEach(c => {
+        c.classList.remove("preview", "invalid");
     });
 }
